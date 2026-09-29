@@ -56,11 +56,12 @@ db.new_table("users_info",
 
 db.new_table("car",
                 """car_id integer primary key autoincrement,
-                user_id integer foreign key,
+                user_id integer,
                 brand text not null,
                 model text not null,
                 year text not null,
-                plate_number text not null
+                plate_number text not null,
+                foreign key(user_id)references user_info(user_id)
                 """)
 
 db.new_table("parking_spaces",
@@ -72,29 +73,35 @@ db.new_table("parking_spaces",
 
 db.new_table("reservations",
                 """reservation_id integer primary key autoincrement,
-                car_id integer foreign key,
-                space_id integer foreign key,
+                car_id integer,
+                space_id integer,
                 reservation_time text not null,
                 entry_time text not null,
                 exit_time text,
-                reservation_status text not null
+                reservation_status text not null,
+                foreign key(car_id)references car(car_id),
+                foreign key(space_id)references parking_spaces(space_id)
                 """)
 
 
 db.new_table("parking_sessions",
                 """session_id integer primary key autoincrement,
-                car_id integer foreign key,
-                space_id integer foreign key,
-                reservation_id integer foreign key,
+                car_id integer,
+                space_id integer,
+                reservation_id,
                 entry_time text not null,
                 exit_time text,
-                cost real
+                cost real,
+                foreign key(car_id)references car(car_id),
+                foreign key(space_id)references parking_spaces(space_id),
+                foreign key(reservation_id)references reservations(reservation_id)
                 """)
 
 db.new_table("payments",
                 """payment_id integer primary key autoincrement,
-                session_id integer foreign key,
+                session_id integer,
                 amount real,
                 payment_method text not null,
-                payment_status text not null
+                payment_status text not null,
+                foreign key(session_id)references parking_sessions(session_id)
                 """)
